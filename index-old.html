@@ -6,6 +6,22 @@
     <title>Studio Beck Design — Organic Modern Interiors</title>
     <meta name="description" content="15 years of design experience rooted in interior architecture. Creating elevated, livable interiors with natural materials and intentional design.">
 
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.studiobeckdesign.com">
+    <meta property="og:title" content="Studio Beck Design — Organic Modern Interiors">
+    <meta property="og:description" content="15 years of design experience rooted in interior architecture. Creating elevated, livable interiors with natural materials and intentional design.">
+    <meta property="og:image" content="https://www.studiobeckdesign.com/images/logo.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://www.studiobeckdesign.com">
+    <meta name="twitter:title" content="Studio Beck Design — Organic Modern Interiors">
+    <meta name="twitter:description" content="15 years of design experience rooted in interior architecture. Creating elevated, livable interiors with natural materials and intentional design.">
+    <meta name="twitter:image" content="https://www.studiobeckdesign.com/images/logo.jpg">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,6 +114,14 @@
             box-shadow: 0 2px 20px rgba(93, 64, 55, 0.1);
         }
 
+        .logo-image {
+            height: 50px;
+            transition: height 0.3s ease;
+        }
+
+        nav.scrolled .logo-image {
+            height: 40px;
+        }
 
         .nav-links {
             display: flex;
@@ -789,9 +813,7 @@
 <body>
     <!-- Navigation -->
     <nav id="nav">
-        <a href="/" style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.5rem; text-decoration: none; color: var(--cacao); letter-spacing: -0.02em;">
-            <strong>Studio Beck Design</strong>
-        </a>
+        <img src="images/portfolio-8.jpg" alt="Studio Beck Design" class="logo-image">
         <ul class="nav-links">
             <li><a href="#philosophy">Philosophy</a></li>
             <li><a href="#services">Services</a></li>
