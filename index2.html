@@ -13,14 +13,12 @@
 
     <style>
         :root {
-            /* Smith and Drake inspired palette - warm neutrals */
-            --charcoal: #3D3A33;
-            --warm-black: #2A2825;
-            --stone: #9B9589;
-            --sand: #C4BDB2;
-            --cream: #F5F3EF;
-            --white: #FAFAF8;
-            --accent: #8B7355;
+            --cacao: #5D4037;
+            --sand: #A3826C;
+            --limestone: #E7D8C7;
+            --moss: #4E6151;
+            --amber: #D1B07E;
+            --charcoal: #231F20;
 
             --spacing-xs: 0.5rem;
             --spacing-sm: 1rem;
@@ -40,8 +38,22 @@
             font-size: 16px;
             line-height: 1.8;
             color: var(--charcoal);
-            background: var(--cream);
+            background: var(--limestone);
             overflow-x: hidden;
+        }
+
+        /* Texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(93, 64, 55, 0.02) 2px, rgba(93, 64, 55, 0.02) 4px);
+            pointer-events: none;
+            z-index: 9999;
         }
 
         /* Typography */
@@ -65,124 +77,57 @@
             font-size: clamp(1.5rem, 4vw, 2.5rem);
         }
 
-        /* Floating Header - Haldon House style */
-        .floating-header {
+        /* Navigation */
+        nav {
             position: fixed;
             top: 0;
-            left: 0;
-            right: 0;
+            width: 100%;
             z-index: 1000;
             padding: var(--spacing-md) var(--spacing-lg);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            pointer-events: none;
-        }
-
-        .floating-header > * {
-            pointer-events: auto;
-        }
-
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            font-size: 1.25rem;
-            text-decoration: none;
-            color: var(--cream);
-            letter-spacing: -0.02em;
-            transition: color 0.4s ease;
-        }
-
-        .logo.scrolled {
-            color: var(--charcoal);
-        }
-
-        .menu-button {
-            background: none;
-            border: none;
-            font-family: 'Lora', serif;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--cream);
-            cursor: pointer;
-            padding: 0.5rem 0;
-            transition: color 0.4s ease;
-        }
-
-        .menu-button.scrolled {
-            color: var(--charcoal);
-        }
-
-        /* Full-screen Navigation Overlay */
-        .nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--warm-black);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .nav-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .nav-close {
-            position: absolute;
-            top: var(--spacing-md);
-            right: var(--spacing-lg);
-            background: none;
-            border: none;
-            font-family: 'Lora', serif;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--cream);
-            cursor: pointer;
-            padding: 0.5rem 0;
-        }
-
-        .nav-links {
-            list-style: none;
-            text-align: center;
-        }
-
-        .nav-links li {
-            margin: var(--spacing-sm) 0;
-            opacity: 0;
-            transform: translateY(20px);
+            background: linear-gradient(180deg, rgba(231, 216, 199, 0.95) 0%, transparent 100%);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .nav-overlay.active .nav-links li {
-            opacity: 1;
-            transform: translateY(0);
+        nav.scrolled {
+            background: rgba(231, 216, 199, 0.98);
+            backdrop-filter: blur(20px);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            box-shadow: 0 2px 20px rgba(93, 64, 55, 0.1);
         }
 
-        .nav-overlay.active .nav-links li:nth-child(1) { transition-delay: 0.1s; }
-        .nav-overlay.active .nav-links li:nth-child(2) { transition-delay: 0.15s; }
-        .nav-overlay.active .nav-links li:nth-child(3) { transition-delay: 0.2s; }
-        .nav-overlay.active .nav-links li:nth-child(4) { transition-delay: 0.25s; }
+
+        .nav-links {
+            display: flex;
+            gap: var(--spacing-md);
+            list-style: none;
+        }
 
         .nav-links a {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            color: var(--cream);
+            color: var(--cacao);
             text-decoration: none;
-            transition: color 0.3s ease;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .nav-links a:hover {
-            color: var(--sand);
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--amber);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         /* Sections */
@@ -204,7 +149,7 @@
 
         /* Hero Section */
         .hero {
-            background: var(--warm-black);
+            background: var(--charcoal);
             flex-direction: column;
             justify-content: center;
             text-align: center;
@@ -226,7 +171,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.5;
+            opacity: 0.6;
         }
 
         .hero::before {
@@ -236,7 +181,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, rgba(42, 40, 37, 0.3) 0%, rgba(42, 40, 37, 0.7) 100%);
+            background: linear-gradient(180deg, rgba(35, 31, 32, 0.4) 0%, rgba(35, 31, 32, 0.8) 100%);
             z-index: 1;
         }
 
@@ -248,16 +193,16 @@
         }
 
         .hero h1 {
-            color: var(--cream);
+            color: var(--limestone);
             margin-bottom: var(--spacing-md);
             animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards;
         }
 
         .hero-subtitle {
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            color: var(--sand);
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--limestone);
             margin-bottom: var(--spacing-lg);
-            max-width: 600px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
             animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.6s backwards;
@@ -277,26 +222,40 @@
         .cta-button {
             display: inline-block;
             padding: 1rem 2.5rem;
-            background: transparent;
-            color: var(--cream);
+            background: var(--amber);
+            color: var(--charcoal);
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            border: 1px solid var(--cream);
+            border-radius: 2px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
             animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.9s backwards;
-            font-weight: 500;
+            font-weight: 600;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--limestone);
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .cta-button:hover::before {
+            left: 0;
         }
 
         .cta-button:hover {
-            background: var(--cream);
-            color: var(--charcoal);
-        }
-
-        button.cta-button {
-            font-family: 'Lora', serif;
-            cursor: pointer;
+            color: var(--cacao);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
         .scroll-indicator {
@@ -304,10 +263,11 @@
             bottom: var(--spacing-lg);
             left: 50%;
             transform: translateX(-50%);
-            width: 1px;
-            height: 60px;
-            background: var(--sand);
-            opacity: 0.4;
+            width: 24px;
+            height: 40px;
+            border: 2px solid var(--limestone);
+            border-radius: 12px;
+            opacity: 0.6;
             z-index: 2;
             animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 1.2s backwards;
         }
@@ -315,22 +275,24 @@
         .scroll-indicator::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: var(--cream);
-            animation: scrollLine 2s ease-in-out infinite;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 8px;
+            background: var(--limestone);
+            border-radius: 2px;
+            animation: scroll 2s ease-in-out infinite;
         }
 
-        @keyframes scrollLine {
-            0%, 100% { transform: translateY(0); opacity: 1; }
-            50% { transform: translateY(40px); opacity: 0; }
+        @keyframes scroll {
+            0%, 100% { transform: translate(-50%, 0); opacity: 1; }
+            50% { transform: translate(-50%, 12px); opacity: 0.3; }
         }
 
         /* Philosophy Section */
         .philosophy {
-            background: var(--cream);
+            background: var(--limestone);
             padding: var(--spacing-xl) var(--spacing-lg);
         }
 
@@ -344,7 +306,7 @@
         }
 
         .philosophy-text h2 {
-            color: var(--charcoal);
+            color: var(--cacao);
             margin-bottom: var(--spacing-md);
         }
 
@@ -368,6 +330,7 @@
         .philosophy-visual {
             position: relative;
             height: 600px;
+            border-radius: 4px;
             overflow: hidden;
         }
 
@@ -376,7 +339,7 @@
             height: 100%;
             object-fit: cover;
             opacity: 0;
-            transform: scale(1.05);
+            transform: scale(1.1);
             transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -387,8 +350,8 @@
 
         /* Services Section */
         .services {
-            background: var(--charcoal);
-            color: var(--cream);
+            background: linear-gradient(135deg, var(--moss) 0%, var(--cacao) 100%);
+            color: var(--limestone);
             padding: var(--spacing-xl) var(--spacing-lg);
         }
 
@@ -398,23 +361,26 @@
         }
 
         .services h2 {
-            color: var(--cream);
+            color: var(--limestone);
             text-align: center;
             margin-bottom: var(--spacing-lg);
         }
 
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-lg);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-md);
         }
 
         .service-card {
-            padding: var(--spacing-md) 0;
-            border-top: 1px solid var(--stone);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: var(--spacing-lg);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0;
             transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .visible .service-card {
@@ -426,48 +392,51 @@
         .visible .service-card:nth-child(2) { transition-delay: 0.4s; }
         .visible .service-card:nth-child(3) { transition-delay: 0.6s; }
 
+        .service-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        }
+
         .service-card h3 {
-            color: var(--cream);
+            color: var(--amber);
             margin-bottom: var(--spacing-sm);
-            font-size: 1.5rem;
+            font-size: 1.8rem;
         }
 
         .service-card p {
             font-size: 0.95rem;
-            line-height: 1.7;
-            color: var(--sand);
+            line-height: 1.6;
         }
 
         /* Portfolio Section */
         .portfolio {
-            background: var(--white);
-            color: var(--charcoal);
+            background: var(--charcoal);
+            color: var(--limestone);
             padding: var(--spacing-xl) var(--spacing-lg);
-            flex-direction: column;
-            justify-content: flex-start;
         }
 
         .portfolio h2 {
-            color: var(--charcoal);
+            color: var(--limestone);
             text-align: center;
             margin-bottom: var(--spacing-lg);
-            width: 100%;
         }
 
         .portfolio-grid {
             max-width: 1600px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-sm);
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-md);
         }
 
         .portfolio-item {
             position: relative;
-            aspect-ratio: 4/5;
+            height: 500px;
+            border-radius: 4px;
             overflow: hidden;
             opacity: 0;
-            transform: scale(0.95);
+            transform: scale(0.9);
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
@@ -485,11 +454,11 @@
         }
 
         .visible .portfolio-item:nth-child(1) { transition-delay: 0.1s; }
-        .visible .portfolio-item:nth-child(2) { transition-delay: 0.15s; }
-        .visible .portfolio-item:nth-child(3) { transition-delay: 0.2s; }
-        .visible .portfolio-item:nth-child(4) { transition-delay: 0.25s; }
-        .visible .portfolio-item:nth-child(5) { transition-delay: 0.3s; }
-        .visible .portfolio-item:nth-child(6) { transition-delay: 0.35s; }
+        .visible .portfolio-item:nth-child(2) { transition-delay: 0.2s; }
+        .visible .portfolio-item:nth-child(3) { transition-delay: 0.3s; }
+        .visible .portfolio-item:nth-child(4) { transition-delay: 0.4s; }
+        .visible .portfolio-item:nth-child(5) { transition-delay: 0.5s; }
+        .visible .portfolio-item:nth-child(6) { transition-delay: 0.6s; }
 
         .portfolio-item::before {
             content: '';
@@ -498,7 +467,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(42, 40, 37, 0.4);
+            background: linear-gradient(180deg, transparent 0%, rgba(93, 64, 55, 0.9) 100%);
             opacity: 0;
             transition: opacity 0.4s ease;
             z-index: 1;
@@ -509,7 +478,7 @@
         }
 
         .portfolio-item:hover img {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
 
         .portfolio-info {
@@ -519,41 +488,38 @@
             right: 0;
             padding: var(--spacing-md);
             z-index: 2;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .portfolio-item:hover .portfolio-info {
-            opacity: 1;
             transform: translateY(0);
         }
 
         .portfolio-info h3 {
-            color: var(--cream);
+            color: var(--limestone);
             margin-bottom: var(--spacing-xs);
-            font-size: 1.25rem;
         }
 
         .portfolio-info p {
-            font-size: 0.85rem;
-            color: var(--sand);
+            font-size: 0.9rem;
+            color: var(--amber);
         }
 
         /* Inspiration Section */
         .inspiration {
-            background: var(--cream);
+            background: var(--limestone);
             padding: var(--spacing-xl) var(--spacing-lg);
         }
 
         .inspiration-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             text-align: center;
         }
 
         .inspiration h2 {
-            color: var(--charcoal);
+            color: var(--cacao);
             margin-bottom: var(--spacing-md);
         }
 
@@ -561,14 +527,16 @@
             color: var(--charcoal);
             font-size: 1.1rem;
             margin-bottom: var(--spacing-lg);
-            max-width: 700px;
+            max-width: 800px;
             margin-left: auto;
             margin-right: auto;
         }
 
         .mood-board {
             margin-top: var(--spacing-lg);
+            border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 30px 80px rgba(93, 64, 55, 0.2);
             opacity: 0;
             transform: translateY(40px);
             transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
@@ -587,54 +555,45 @@
 
         /* Contact Section */
         .contact {
-            background: var(--white);
+            background: var(--limestone);
             text-align: center;
             padding: var(--spacing-xl) var(--spacing-lg);
         }
 
         .contact-content {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .contact h2 {
-            color: var(--charcoal);
+            color: var(--cacao);
             margin-bottom: var(--spacing-md);
         }
 
         .contact p {
             color: var(--charcoal);
             margin-bottom: var(--spacing-lg);
-            font-size: 1rem;
-        }
-
-        .contact .cta-button {
-            color: var(--charcoal);
-            border-color: var(--charcoal);
-        }
-
-        .contact .cta-button:hover {
-            background: var(--charcoal);
-            color: var(--cream);
+            font-size: 1.1rem;
         }
 
         /* Footer */
         footer {
             background: var(--charcoal);
-            color: var(--sand);
+            color: var(--limestone);
             padding: var(--spacing-lg);
             text-align: center;
             font-size: 0.85rem;
         }
 
-        /* Contact Modal - Smith and Drake inspired single column */
+        /* Contact Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(42, 40, 37, 0.95);
+            background: rgba(35, 31, 32, 0.8);
+            backdrop-filter: blur(10px);
             z-index: 10000;
             display: flex;
             align-items: center;
@@ -642,8 +601,6 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
-            padding: var(--spacing-lg);
         }
 
         .modal-overlay.active {
@@ -652,19 +609,21 @@
         }
 
         .modal {
-            background: var(--cream);
-            max-width: 560px;
-            width: 100%;
-            padding: var(--spacing-xl) var(--spacing-lg);
+            background: var(--limestone);
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: var(--spacing-lg);
             position: relative;
-            transform: translateY(30px);
-            opacity: 0;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.9) translateY(30px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
         }
 
         .modal-overlay.active .modal {
-            transform: translateY(0);
-            opacity: 1;
+            transform: scale(1) translateY(0);
         }
 
         .modal-close {
@@ -673,31 +632,33 @@
             right: var(--spacing-md);
             background: none;
             border: none;
-            font-family: 'Lora', serif;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--stone);
+            font-size: 2rem;
+            color: var(--cacao);
             cursor: pointer;
-            padding: 0.5rem;
-            transition: color 0.3s ease;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border-radius: 50%;
         }
 
         .modal-close:hover {
-            color: var(--charcoal);
+            background: rgba(93, 64, 55, 0.1);
+            transform: rotate(90deg);
         }
 
         .modal h2 {
-            color: var(--charcoal);
-            margin-bottom: var(--spacing-xs);
-            font-size: 2rem;
+            color: var(--cacao);
+            margin-bottom: var(--spacing-sm);
         }
 
         .modal-intro {
-            color: var(--stone);
+            color: var(--charcoal);
             margin-bottom: var(--spacing-lg);
-            font-size: 0.95rem;
-            line-height: 1.6;
+            font-size: 1rem;
         }
 
         .form-group {
@@ -706,135 +667,100 @@
 
         .form-group label {
             display: block;
-            color: var(--charcoal);
-            font-size: 0.8rem;
-            font-weight: 500;
+            color: var(--cacao);
+            font-size: 0.9rem;
+            font-weight: 600;
             margin-bottom: var(--spacing-xs);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.05em;
         }
 
         .form-group input,
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 1rem;
-            border: 1px solid var(--sand);
-            background: var(--white);
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--sand);
+            border-radius: 4px;
             font-family: 'Lora', serif;
             font-size: 1rem;
             color: var(--charcoal);
-            transition: border-color 0.3s ease;
+            background: white;
+            transition: all 0.3s ease;
         }
 
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
             outline: none;
-            border-color: var(--charcoal);
-        }
-
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: var(--stone);
+            border-color: var(--cacao);
+            box-shadow: 0 0 0 3px rgba(93, 64, 55, 0.1);
         }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 140px;
+            min-height: 120px;
         }
 
-        .form-group select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%233D3A33' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            padding-right: 2.5rem;
-        }
-
-        /* Checkbox group */
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            font-size: 0.95rem;
-            color: var(--charcoal);
-        }
-
-        .checkbox-label input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            border: 1px solid var(--sand);
-            appearance: none;
-            background: var(--white);
-            cursor: pointer;
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .checkbox-label input[type="checkbox"]:checked {
-            background: var(--charcoal);
-            border-color: var(--charcoal);
-        }
-
-        .checkbox-label input[type="checkbox"]:checked::after {
-            content: '';
-            position: absolute;
-            left: 5px;
-            top: 2px;
-            width: 5px;
-            height: 9px;
-            border: solid var(--cream);
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
         }
 
         .submit-button {
             width: 100%;
             padding: 1rem 2rem;
-            background: var(--charcoal);
-            color: var(--cream);
+            background: var(--cacao);
+            color: var(--limestone);
             border: none;
+            border-radius: 4px;
             font-family: 'Lora', serif;
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.1em;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             margin-top: var(--spacing-sm);
         }
 
         .submit-button:hover {
-            background: var(--warm-black);
+            background: var(--moss);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(93, 64, 55, 0.3);
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 1024px) {
-            .services-grid {
-                grid-template-columns: 1fr;
-                gap: var(--spacing-md);
-            }
-
-            .portfolio-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .submit-button:active {
+            transform: translateY(0);
         }
 
         @media (max-width: 768px) {
-            .floating-header {
-                padding: var(--spacing-sm) var(--spacing-md);
+            .form-row {
+                grid-template-columns: 1fr;
             }
 
-            .logo {
-                font-size: 1.1rem;
+            .modal {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: var(--spacing-sm);
+            }
+
+            .logo-image {
+                height: 40px;
+            }
+
+            .nav-links {
+                gap: var(--spacing-sm);
+            }
+
+            .nav-links a {
+                font-size: 0.75rem;
             }
 
             section {
@@ -854,27 +780,23 @@
                 grid-template-columns: 1fr;
             }
 
-            .modal {
-                padding: var(--spacing-lg) var(--spacing-md);
+            .portfolio-item {
+                height: 400px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Floating Header - Logo + Menu only -->
-    <header class="floating-header">
-        <a href="/" class="logo" id="logo">Studio Beck Design</a>
-        <button class="menu-button" id="menuButton">Menu</button>
-    </header>
-
-    <!-- Full-screen Navigation Overlay -->
-    <nav class="nav-overlay" id="navOverlay">
-        <button class="nav-close" id="navClose">Close</button>
+    <!-- Navigation -->
+    <nav id="nav">
+        <a href="/" style="font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.5rem; text-decoration: none; color: var(--cacao); letter-spacing: -0.02em;">
+            <strong>Studio Beck Design</strong>
+        </a>
         <ul class="nav-links">
-            <li><a href="#philosophy" class="nav-link">Philosophy</a></li>
-            <li><a href="#services" class="nav-link">Services</a></li>
-            <li><a href="#portfolio" class="nav-link">Portfolio</a></li>
-            <li><a href="#contact" class="nav-link">Inquire</a></li>
+            <li><a href="#philosophy">Philosophy</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 
@@ -910,7 +832,7 @@
     <!-- Services Section -->
     <section class="services" id="services">
         <div class="services-content">
-            <h2>Services</h2>
+            <h2>Design Services for Every Stage</h2>
             <div class="services-grid">
                 <div class="service-card">
                     <h3>Design Consultation</h3>
@@ -922,7 +844,7 @@
                 </div>
                 <div class="service-card">
                     <h3>Full-Service Design</h3>
-                    <p>Comprehensive design from concept to completion. We handle space planning, material selection, furniture sourcing, contractor coordination, and final styling.</p>
+                    <p>Comprehensive design from concept to completion. We handle space planning, material selection, furniture sourcing, contractor coordination, and final styling—bringing your entire vision to life.</p>
                 </div>
             </div>
         </div>
@@ -936,42 +858,42 @@
                 <img src="images/portfolio-2.jpg" alt="Modern kitchen with natural materials">
                 <div class="portfolio-info">
                     <h3>Organic Kitchen</h3>
-                    <p>Natural wood & stone</p>
+                    <p>Natural wood & stone • Full renovation</p>
                 </div>
             </div>
             <div class="portfolio-item">
                 <img src="images/portfolio-3.jpg" alt="Moody modern bathroom">
                 <div class="portfolio-info">
                     <h3>Modern Sanctuary</h3>
-                    <p>Bathroom retreat</p>
+                    <p>Bathroom retreat • Custom details</p>
                 </div>
             </div>
             <div class="portfolio-item">
                 <img src="images/portfolio-4.jpg" alt="Coastal living room">
                 <div class="portfolio-info">
                     <h3>Coastal Living</h3>
-                    <p>Full home design</p>
+                    <p>Full home design • Natural light focus</p>
                 </div>
             </div>
             <div class="portfolio-item">
                 <img src="images/portfolio-5.jpg" alt="Custom butler's pantry">
                 <div class="portfolio-info">
                     <h3>Butler's Pantry</h3>
-                    <p>Custom millwork</p>
+                    <p>Custom millwork • Functional elegance</p>
                 </div>
             </div>
             <div class="portfolio-item">
                 <img src="images/portfolio-6.jpg" alt="Warm modern bedroom">
                 <div class="portfolio-info">
                     <h3>Warm Modernism</h3>
-                    <p>Primary suite</p>
+                    <p>Primary suite • Organic textures</p>
                 </div>
             </div>
             <div class="portfolio-item">
                 <img src="images/portfolio-1.jpg" alt="Organic modern seating area">
                 <div class="portfolio-info">
                     <h3>Curated Comfort</h3>
-                    <p>Living space</p>
+                    <p>Living space • Layered design</p>
                 </div>
             </div>
         </div>
@@ -980,7 +902,7 @@
     <!-- Inspiration Section -->
     <section class="inspiration">
         <div class="inspiration-content">
-            <h2>Our Process</h2>
+            <h2>Our Design Process</h2>
             <p>Every project begins with thoughtful curation—bringing together materials, textures, and pieces that tell a cohesive story while honoring your unique vision.</p>
             <div class="mood-board">
                 <img src="images/portfolio-7.jpg" alt="Design mood board and material selections">
@@ -991,23 +913,29 @@
     <!-- Contact Section -->
     <section class="contact" id="contact">
         <div class="contact-content">
-            <h2>Let's Create Together</h2>
+            <h2>Let's Create Something Beautiful</h2>
             <p>Whether you need a quick consultation or a complete transformation, there's a way to work together that fits your project and budget.</p>
-            <button class="cta-button" id="openModalBtn">Begin Your Project</button>
+            <button class="cta-button" id="openModalBtn">Get In Touch</button>
         </div>
     </section>
 
-    <!-- Contact Modal - Smith and Drake inspired layout -->
+    <!-- Contact Modal -->
     <div class="modal-overlay" id="contactModal">
         <div class="modal">
-            <button class="modal-close" id="closeModalBtn">Close</button>
-            <h2>Project Inquiry</h2>
-            <p class="modal-intro">Tell us about your project and we'll be in touch within 24 hours to discuss next steps.</p>
+            <button class="modal-close" id="closeModalBtn">&times;</button>
+            <h2>Start Your Project</h2>
+            <p class="modal-intro">Tell us about your vision and we'll get back to you within 24 hours.</p>
 
             <form id="contactForm">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" name="name" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -1016,62 +944,27 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Phone</label>
+                    <label for="phone">Phone Number</label>
                     <input type="tel" id="phone" name="phone">
                 </div>
 
                 <div class="form-group">
-                    <label for="referral">How did you hear about us?</label>
-                    <select id="referral" name="referral" required>
-                        <option value="">Select one...</option>
-                        <option value="instagram">Instagram</option>
-                        <option value="pinterest">Pinterest</option>
-                        <option value="google">Google Search</option>
-                        <option value="referral">Friend or Family</option>
-                        <option value="other">Other</option>
+                    <label for="serviceType">Service Interest</label>
+                    <select id="serviceType" name="serviceType" required>
+                        <option value="">Select a service...</option>
+                        <option value="consultation">Design Consultation</option>
+                        <option value="room-refresh">Room Refresh</option>
+                        <option value="full-service">Full-Service Design</option>
+                        <option value="not-sure">Not Sure Yet</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Services of Interest</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="services" value="consultation">
-                            Design Consultation
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="services" value="room-refresh">
-                            Room Refresh
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="services" value="full-service">
-                            Full-Service Design
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="services" value="not-sure">
-                            Not sure yet
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="budget">Estimated Budget</label>
-                    <select id="budget" name="budget" required>
-                        <option value="">Select a range...</option>
-                        <option value="under-10k">Under $10,000</option>
-                        <option value="10k-25k">$10,000 - $25,000</option>
-                        <option value="25k-50k">$25,000 - $50,000</option>
-                        <option value="50k-100k">$50,000 - $100,000</option>
-                        <option value="over-100k">Over $100,000</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="projectDetails">Tell us about your project</label>
+                    <label for="projectDetails">Tell Us About Your Project</label>
                     <textarea id="projectDetails" name="projectDetails" placeholder="What spaces are you looking to transform? What's your timeline? Any specific style preferences?" required></textarea>
                 </div>
 
-                <button type="submit" class="submit-button">Submit Inquiry</button>
+                <button type="submit" class="submit-button">Send Message</button>
             </form>
         </div>
     </div>
@@ -1081,58 +974,16 @@
         <p>&copy; 2025 Studio Beck Design. All rights reserved.</p>
     </footer>
 
+    <!-- JavaScript for scroll animations -->
     <script>
-        // Logo and menu button color change based on background
-        const logo = document.getElementById('logo');
-        const menuButton = document.getElementById('menuButton');
-
-        // Sections with dark backgrounds need light header text
-        const darkSections = document.querySelectorAll('.hero, .services');
-
-        function updateHeaderColors() {
-            const headerHeight = 80;
-            let onDarkSection = false;
-
-            darkSections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-                // Check if dark section is behind the header
-                if (rect.top < headerHeight && rect.bottom > headerHeight) {
-                    onDarkSection = true;
-                }
-            });
-
-            if (onDarkSection) {
-                logo.classList.remove('scrolled');
-                menuButton.classList.remove('scrolled');
+        // Navbar scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
             } else {
-                logo.classList.add('scrolled');
-                menuButton.classList.add('scrolled');
+                nav.classList.remove('scrolled');
             }
-        }
-
-        window.addEventListener('scroll', updateHeaderColors);
-        updateHeaderColors(); // Initial check
-
-        // Navigation overlay
-        const navOverlay = document.getElementById('navOverlay');
-        const navClose = document.getElementById('navClose');
-
-        menuButton.addEventListener('click', () => {
-            navOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        navClose.addEventListener('click', () => {
-            navOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        // Close nav when clicking a link
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                navOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            });
         });
 
         // Intersection Observer for section animations
@@ -1149,6 +1000,7 @@
             });
         }, observerOptions);
 
+        // Observe all sections except hero (already visible)
         document.querySelectorAll('section:not(.hero)').forEach(section => {
             observer.observe(section);
         });
@@ -1172,7 +1024,7 @@
             const scrolled = window.pageYOffset;
             const heroImg = document.querySelector('.hero-background img');
             if (heroImg && scrolled < window.innerHeight) {
-                heroImg.style.transform = `translateY(${scrolled * 0.4}px)`;
+                heroImg.style.transform = `translateY(${scrolled * 0.5}px)`;
             }
         });
 
@@ -1182,17 +1034,20 @@
         const closeModalBtn = document.getElementById('closeModalBtn');
         const contactForm = document.getElementById('contactForm');
 
+        // Open modal
         openModalBtn.addEventListener('click', (e) => {
             e.preventDefault();
             modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
         });
 
+        // Close modal
         closeModalBtn.addEventListener('click', () => {
             modal.classList.remove('active');
-            document.body.style.overflow = '';
+            document.body.style.overflow = ''; // Restore scrolling
         });
 
+        // Close modal when clicking outside
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.classList.remove('active');
@@ -1200,6 +1055,7 @@
             }
         });
 
+        // Close modal on Escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && modal.classList.contains('active')) {
                 modal.classList.remove('active');
@@ -1207,20 +1063,27 @@
             }
         });
 
+        // Handle form submission
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
+            // Collect form data
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                serviceType: document.getElementById('serviceType').value,
+                projectDetails: document.getElementById('projectDetails').value
+            };
 
-            // Get all checked services
-            data.services = Array.from(contactForm.querySelectorAll('input[name="services"]:checked'))
-                .map(cb => cb.value);
+            // Log form data (later this will send to backend/email service)
+            console.log('Form submitted:', formData);
 
-            console.log('Form submitted:', data);
-
+            // Show success message
             alert('Thank you for your inquiry! We\'ll be in touch within 24 hours.');
 
+            // Reset form and close modal
             contactForm.reset();
             modal.classList.remove('active');
             document.body.style.overflow = '';
