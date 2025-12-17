@@ -13,7 +13,6 @@
 
     <style>
         :root {
-            /* Smith and Drake inspired palette - warm neutrals */
             --charcoal: #3D3A33;
             --warm-black: #2A2825;
             --stone: #9B9589;
@@ -35,13 +34,21 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Lora', serif;
             font-size: 16px;
             line-height: 1.8;
             color: var(--charcoal);
-            background: var(--cream);
+            background: var(--warm-black);
             overflow-x: hidden;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
         }
 
         /* Typography */
@@ -52,20 +59,11 @@
             line-height: 1.1;
         }
 
-        h1 {
-            font-size: clamp(3rem, 10vw, 7rem);
-            font-weight: 900;
-        }
+        h1 { font-size: clamp(3rem, 10vw, 7rem); font-weight: 900; }
+        h2 { font-size: clamp(2rem, 6vw, 4rem); }
+        h3 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
 
-        h2 {
-            font-size: clamp(2rem, 6vw, 4rem);
-        }
-
-        h3 {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-        }
-
-        /* Floating Header - Haldon House style */
+        /* Floating Header */
         .floating-header {
             position: fixed;
             top: 0;
@@ -77,7 +75,10 @@
             justify-content: space-between;
             align-items: center;
             pointer-events: none;
+            transition: background-color 0.4s ease;
         }
+
+        /* Header always transparent */
 
         .floating-header > * {
             pointer-events: auto;
@@ -93,10 +94,6 @@
             transition: color 0.4s ease;
         }
 
-        .logo.scrolled {
-            color: var(--charcoal);
-        }
-
         .menu-button {
             background: none;
             border: none;
@@ -108,10 +105,6 @@
             cursor: pointer;
             padding: 0.5rem 0;
             transition: color 0.4s ease;
-        }
-
-        .menu-button.scrolled {
-            color: var(--charcoal);
         }
 
         /* Full-screen Navigation Overlay */
@@ -181,99 +174,92 @@
             transition: color 0.3s ease;
         }
 
-        .nav-links a:hover {
-            color: var(--sand);
-        }
+        .nav-links a:hover { color: var(--sand); }
 
-        /* Sections */
-        section {
-            min-height: 100vh;
+        /* ===== PARALLAX SCROLL SECTIONS ===== */
+        .scroll-section {
             position: relative;
-            display: flex;
-            align-items: center;
-            padding: var(--spacing-xl) var(--spacing-lg);
-            opacity: 0;
-            transform: translateY(60px);
-            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        section.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Hero Section */
-        .hero {
-            background: var(--warm-black);
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            position: relative;
+        /* Sticky Background Container */
+        .sticky-bg {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 100vh;
             overflow: hidden;
-            padding: 0;
+            z-index: 0;
         }
 
-        .hero-background {
+        .bg-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .hero-background img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.5;
+        .bg-image.active {
+            opacity: 1;
         }
 
-        .hero::before {
+        .bg-image::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, rgba(42, 40, 37, 0.3) 0%, rgba(42, 40, 37, 0.7) 100%);
-            z-index: 1;
+            background: linear-gradient(180deg, rgba(42, 40, 37, 0.3) 0%, rgba(42, 40, 37, 0.6) 100%);
         }
 
-        .hero-content {
+        /* Scrolling Content Panels */
+        .scroll-content {
             position: relative;
-            z-index: 2;
-            max-width: 1200px;
+            z-index: 1;
+            margin-top: -100vh; /* Pull content up to overlap sticky bg */
+        }
+
+        .content-panel {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             padding: var(--spacing-xl) var(--spacing-lg);
-        }
-
-        .hero h1 {
+            text-align: center;
             color: var(--cream);
-            margin-bottom: var(--spacing-md);
-            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards;
         }
 
-        .hero-subtitle {
+        .content-panel h1,
+        .content-panel h2,
+        .content-panel h3 {
+            color: var(--cream);
+        }
+
+        .panel-inner {
+            max-width: 800px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .content-panel.visible .panel-inner {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .panel-inner p {
             font-size: clamp(1rem, 2vw, 1.2rem);
-            color: var(--sand);
-            margin-bottom: var(--spacing-lg);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.6s backwards;
+            margin-bottom: var(--spacing-md);
+            line-height: 1.9;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
+        /* CTA Button */
         .cta-button {
             display: inline-block;
             padding: 1rem 2.5rem;
@@ -285,8 +271,9 @@
             letter-spacing: 0.15em;
             border: 1px solid var(--cream);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.9s backwards;
             font-weight: 500;
+            cursor: pointer;
+            font-family: 'Lora', serif;
         }
 
         .cta-button:hover {
@@ -294,11 +281,17 @@
             color: var(--charcoal);
         }
 
-        button.cta-button {
-            font-family: 'Lora', serif;
-            cursor: pointer;
+        /* Hero specific */
+        .hero-panel h1 {
+            margin-bottom: var(--spacing-md);
         }
 
+        .hero-panel .tagline {
+            font-style: italic;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Scroll indicator */
         .scroll-indicator {
             position: absolute;
             bottom: var(--spacing-lg);
@@ -308,8 +301,6 @@
             height: 60px;
             background: var(--sand);
             opacity: 0.4;
-            z-index: 2;
-            animation: fadeInUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) 1.2s backwards;
         }
 
         .scroll-indicator::before {
@@ -328,132 +319,53 @@
             50% { transform: translateY(40px); opacity: 0; }
         }
 
-        /* Philosophy Section */
-        .philosophy {
-            background: var(--cream);
-            padding: var(--spacing-xl) var(--spacing-lg);
-        }
-
-        .philosophy-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--spacing-xl);
-            align-items: center;
-        }
-
-        .philosophy-text h2 {
-            color: var(--charcoal);
-            margin-bottom: var(--spacing-md);
-        }
-
-        .philosophy-text p {
-            color: var(--charcoal);
-            margin-bottom: var(--spacing-sm);
-            opacity: 0;
-            transform: translateX(-30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .visible .philosophy-text p {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .visible .philosophy-text p:nth-child(2) { transition-delay: 0.2s; }
-        .visible .philosophy-text p:nth-child(3) { transition-delay: 0.4s; }
-        .visible .philosophy-text p:nth-child(4) { transition-delay: 0.6s; }
-
-        .philosophy-visual {
-            position: relative;
-            height: 600px;
-            overflow: hidden;
-        }
-
-        .philosophy-visual img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transform: scale(1.05);
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .visible .philosophy-visual img {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Services Section */
-        .services {
-            background: var(--charcoal);
-            color: var(--cream);
-            padding: var(--spacing-xl) var(--spacing-lg);
-        }
-
-        .services-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .services h2 {
-            color: var(--cream);
-            text-align: center;
-            margin-bottom: var(--spacing-lg);
-        }
-
+        /* Service Cards in scroll panels */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-lg);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+            max-width: 1000px;
+            margin-top: var(--spacing-lg);
         }
 
         .service-card {
-            padding: var(--spacing-md) 0;
-            border-top: 1px solid var(--stone);
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(245, 243, 239, 0.95);
+            backdrop-filter: blur(10px);
+            padding: var(--spacing-md);
+            text-align: left;
+            border-radius: 4px;
         }
-
-        .visible .service-card {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .visible .service-card:nth-child(1) { transition-delay: 0.2s; }
-        .visible .service-card:nth-child(2) { transition-delay: 0.4s; }
-        .visible .service-card:nth-child(3) { transition-delay: 0.6s; }
 
         .service-card h3 {
-            color: var(--cream);
+            color: var(--charcoal);
+            font-size: 1.3rem;
             margin-bottom: var(--spacing-sm);
-            font-size: 1.5rem;
         }
 
         .service-card p {
+            color: var(--charcoal);
             font-size: 0.95rem;
             line-height: 1.7;
-            color: var(--sand);
+            margin-bottom: 0;
         }
 
-        /* Portfolio Section */
-        .portfolio {
-            background: var(--white);
-            color: var(--charcoal);
+        /* ===== STANDARD SECTIONS (Portfolio, Contact) ===== */
+        .standard-section {
+            background: var(--cream);
             padding: var(--spacing-xl) var(--spacing-lg);
+            min-height: 100vh;
+            display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
         }
 
-        .portfolio h2 {
+        .standard-section h2 {
             color: var(--charcoal);
             text-align: center;
             margin-bottom: var(--spacing-lg);
-            width: 100%;
         }
 
+        /* Portfolio Grid */
         .portfolio-grid {
             max-width: 1600px;
             margin: 0 auto;
@@ -466,9 +378,6 @@
             position: relative;
             aspect-ratio: 4/5;
             overflow: hidden;
-            opacity: 0;
-            transform: scale(0.95);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
 
@@ -478,18 +387,6 @@
             object-fit: cover;
             transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .visible .portfolio-item {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .visible .portfolio-item:nth-child(1) { transition-delay: 0.1s; }
-        .visible .portfolio-item:nth-child(2) { transition-delay: 0.15s; }
-        .visible .portfolio-item:nth-child(3) { transition-delay: 0.2s; }
-        .visible .portfolio-item:nth-child(4) { transition-delay: 0.25s; }
-        .visible .portfolio-item:nth-child(5) { transition-delay: 0.3s; }
-        .visible .portfolio-item:nth-child(6) { transition-delay: 0.35s; }
 
         .portfolio-item::before {
             content: '';
@@ -504,13 +401,8 @@
             z-index: 1;
         }
 
-        .portfolio-item:hover::before {
-            opacity: 1;
-        }
-
-        .portfolio-item:hover img {
-            transform: scale(1.05);
-        }
+        .portfolio-item:hover::before { opacity: 1; }
+        .portfolio-item:hover img { transform: scale(1.05); }
 
         .portfolio-info {
             position: absolute;
@@ -540,56 +432,10 @@
             color: var(--sand);
         }
 
-        /* Inspiration Section */
-        .inspiration {
-            background: var(--cream);
-            padding: var(--spacing-xl) var(--spacing-lg);
-        }
-
-        .inspiration-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .inspiration h2 {
-            color: var(--charcoal);
-            margin-bottom: var(--spacing-md);
-        }
-
-        .inspiration p {
-            color: var(--charcoal);
-            font-size: 1.1rem;
-            margin-bottom: var(--spacing-lg);
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .mood-board {
-            margin-top: var(--spacing-lg);
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .visible .mood-board {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .mood-board img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
         /* Contact Section */
-        .contact {
+        .contact-section {
             background: var(--white);
             text-align: center;
-            padding: var(--spacing-xl) var(--spacing-lg);
         }
 
         .contact-content {
@@ -597,23 +443,12 @@
             margin: 0 auto;
         }
 
-        .contact h2 {
-            color: var(--charcoal);
-            margin-bottom: var(--spacing-md);
-        }
-
-        .contact p {
-            color: var(--charcoal);
-            margin-bottom: var(--spacing-lg);
-            font-size: 1rem;
-        }
-
-        .contact .cta-button {
+        .contact-section .cta-button {
             color: var(--charcoal);
             border-color: var(--charcoal);
         }
 
-        .contact .cta-button:hover {
+        .contact-section .cta-button:hover {
             background: var(--charcoal);
             color: var(--cream);
         }
@@ -627,7 +462,7 @@
             font-size: 0.85rem;
         }
 
-        /* Contact Modal - Smith and Drake inspired single column */
+        /* ===== MODAL ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -683,9 +518,7 @@
             transition: color 0.3s ease;
         }
 
-        .modal-close:hover {
-            color: var(--charcoal);
-        }
+        .modal-close:hover { color: var(--charcoal); }
 
         .modal h2 {
             color: var(--charcoal);
@@ -734,11 +567,6 @@
             border-color: var(--charcoal);
         }
 
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: var(--stone);
-        }
-
         .form-group textarea {
             resize: vertical;
             min-height: 140px;
@@ -752,7 +580,6 @@
             padding-right: 2.5rem;
         }
 
-        /* Checkbox group */
         .checkbox-group {
             display: flex;
             flex-direction: column;
@@ -816,15 +643,14 @@
             background: var(--warm-black);
         }
 
-        /* Mobile Responsive */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
-            .services-grid {
-                grid-template-columns: 1fr;
-                gap: var(--spacing-md);
-            }
-
             .portfolio-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -833,21 +659,10 @@
                 padding: var(--spacing-sm) var(--spacing-md);
             }
 
-            .logo {
-                font-size: 1.1rem;
-            }
+            .logo { font-size: 1.1rem; }
 
-            section {
+            .content-panel {
                 padding: var(--spacing-lg) var(--spacing-md);
-            }
-
-            .philosophy-content {
-                grid-template-columns: 1fr;
-                gap: var(--spacing-lg);
-            }
-
-            .philosophy-visual {
-                height: 400px;
             }
 
             .portfolio-grid {
@@ -861,9 +676,9 @@
     </style>
 </head>
 <body>
-    <!-- Floating Header - Logo + Menu only -->
-    <header class="floating-header">
-        <a href="/" class="logo" id="logo">Studio Beck Design</a>
+    <!-- Floating Header -->
+    <header class="floating-header" id="mainHeader">
+        <a href="#" class="logo" id="logo">Studio Beck Design</a>
         <button class="menu-button" id="menuButton">Menu</button>
     </header>
 
@@ -878,58 +693,87 @@
         </ul>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero visible">
-        <div class="hero-background">
-            <img src="images/portfolio-4.jpg" alt="Studio Beck Design Interior">
+    <!-- ===== HERO + PHILOSOPHY SCROLL SECTION ===== -->
+    <section class="scroll-section" id="hero-philosophy">
+        <!-- Sticky Background with Multiple Images -->
+        <div class="sticky-bg">
+            <div class="bg-image active" style="background-image: url('images/portfolio-4.jpg');" data-index="0"></div>
+            <div class="bg-image" style="background-image: url('images/portfolio-1.jpg');" data-index="1"></div>
+            <div class="bg-image" style="background-image: url('images/portfolio-2.jpg');" data-index="2"></div>
         </div>
-        <div class="hero-content">
-            <h1>Spaces That<br>Tell Your Story</h1>
-            <p class="hero-subtitle">15 years of design experience rooted in interior architecture. Creating elevated, livable interiors with natural materials and intentional design.</p>
-            <a href="#contact" class="cta-button">Start Your Journey</a>
-        </div>
-        <div class="scroll-indicator"></div>
-    </section>
 
-    <!-- Philosophy Section -->
-    <section class="philosophy" id="philosophy">
-        <div class="philosophy-content">
-            <div class="philosophy-text">
-                <h2>Design With Purpose</h2>
-                <p>We bring 15 years of design experience rooted in interior architecture. We think about how spaces work, not just how they look.</p>
-                <p>Great design comes from truly listening. Every project begins with understanding how you live, what you need, and what matters most to you.</p>
-                <p>Our style leans organic modern: natural materials, colors pulled from the earth, curated pieces, and layered textures.</p>
-                <p>The result is a home that feels both collected and comfortable—a space that honors both your story and the bones of your home.</p>
+        <!-- Scrolling Content Panels -->
+        <div class="scroll-content">
+            <!-- Hero Panel -->
+            <div class="content-panel hero-panel visible" data-bg="0">
+                <div class="panel-inner">
+                    <h1>Spaces That<br>Tell Your Story</h1>
+                    <p class="tagline">15 years of design experience rooted in interior architecture. Creating elevated, livable interiors with natural materials and intentional design.</p>
+                    <a href="#contact" class="cta-button">Start Your Journey</a>
+                </div>
+                <div class="scroll-indicator"></div>
             </div>
-            <div class="philosophy-visual">
-                <img src="images/portfolio-1.jpg" alt="Organic modern living space">
-            </div>
-        </div>
-    </section>
 
-    <!-- Services Section -->
-    <section class="services" id="services">
-        <div class="services-content">
-            <h2>Services</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <h3>Design Consultation</h3>
-                    <p>Not sure where to start? A focused consultation helps clarify your vision, identify priorities, and create a roadmap for your project. Perfect for DIY-ers who need expert guidance.</p>
+            <!-- Philosophy Panel 1 -->
+            <div class="content-panel" id="philosophy" data-bg="1">
+                <div class="panel-inner">
+                    <h2>Design With Purpose</h2>
+                    <p>We bring 15 years of design experience rooted in interior architecture. We think about how spaces work, not just how they look.</p>
+                    <p>Great design comes from truly listening. Every project begins with understanding how you live, what you need, and what matters most to you.</p>
                 </div>
-                <div class="service-card">
-                    <h3>Room Refresh</h3>
-                    <p>Transform a single space with curated selections, layout optimization, and styling guidance. A budget-friendly way to reimagine a room without the commitment of a full renovation.</p>
-                </div>
-                <div class="service-card">
-                    <h3>Full-Service Design</h3>
-                    <p>Comprehensive design from concept to completion. We handle space planning, material selection, furniture sourcing, contractor coordination, and final styling.</p>
+            </div>
+
+            <!-- Philosophy Panel 2 -->
+            <div class="content-panel" data-bg="2">
+                <div class="panel-inner">
+                    <h2>Organic Modern</h2>
+                    <p>Our style leans organic modern: natural materials, colors pulled from the earth, curated pieces, and layered textures.</p>
+                    <p>The result is a home that feels both collected and comfortable—a space that honors both your story and the bones of your home.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Portfolio Section -->
-    <section class="portfolio" id="portfolio">
+    <!-- ===== SERVICES SCROLL SECTION ===== -->
+    <section class="scroll-section" id="services-section">
+        <div class="sticky-bg">
+            <div class="bg-image active" style="background-image: url('images/portfolio-3.jpg');" data-index="0"></div>
+            <div class="bg-image" style="background-image: url('images/portfolio-5.jpg');" data-index="1"></div>
+        </div>
+
+        <div class="scroll-content">
+            <!-- Services Intro Panel -->
+            <div class="content-panel" id="services" data-bg="0">
+                <div class="panel-inner">
+                    <h2>Services</h2>
+                    <p>Whether you need a quick consultation or a complete transformation, there's a way to work together that fits your project and budget.</p>
+                </div>
+            </div>
+
+            <!-- Services Cards Panel -->
+            <div class="content-panel" data-bg="1">
+                <div class="panel-inner">
+                    <div class="services-grid">
+                        <div class="service-card">
+                            <h3>Design Consultation</h3>
+                            <p>Not sure where to start? A focused consultation helps clarify your vision, identify priorities, and create a roadmap for your project.</p>
+                        </div>
+                        <div class="service-card">
+                            <h3>Room Refresh</h3>
+                            <p>Transform a single space with curated selections, layout optimization, and styling guidance.</p>
+                        </div>
+                        <div class="service-card">
+                            <h3>Full-Service Design</h3>
+                            <p>Comprehensive design from concept to completion. We handle space planning, material selection, furniture sourcing, and final styling.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PORTFOLIO (Standard Section) ===== -->
+    <section class="standard-section" id="portfolio">
         <h2>Selected Work</h2>
         <div class="portfolio-grid">
             <div class="portfolio-item">
@@ -977,19 +821,8 @@
         </div>
     </section>
 
-    <!-- Inspiration Section -->
-    <section class="inspiration">
-        <div class="inspiration-content">
-            <h2>Our Process</h2>
-            <p>Every project begins with thoughtful curation—bringing together materials, textures, and pieces that tell a cohesive story while honoring your unique vision.</p>
-            <div class="mood-board">
-                <img src="images/portfolio-7.jpg" alt="Design mood board and material selections">
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
+    <!-- ===== CONTACT (Standard Section) ===== -->
+    <section class="standard-section contact-section" id="contact">
         <div class="contact-content">
             <h2>Let's Create Together</h2>
             <p>Whether you need a quick consultation or a complete transformation, there's a way to work together that fits your project and budget.</p>
@@ -997,7 +830,12 @@
         </div>
     </section>
 
-    <!-- Contact Modal - Smith and Drake inspired layout -->
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Studio Beck Design. All rights reserved.</p>
+    </footer>
+
+    <!-- Contact Modal -->
     <div class="modal-overlay" id="contactModal">
         <div class="modal">
             <button class="modal-close" id="closeModalBtn">Close</button>
@@ -1076,154 +914,130 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 Studio Beck Design. All rights reserved.</p>
-    </footer>
-
     <script>
-        // Logo and menu button color change based on background
-        const logo = document.getElementById('logo');
-        const menuButton = document.getElementById('menuButton');
+        document.addEventListener('DOMContentLoaded', () => {
+            // ===== ELEMENTS =====
+            const body = document.body;
+            const mainHeader = document.getElementById('mainHeader');
+            const logo = document.getElementById('logo');
+            const menuButton = document.getElementById('menuButton');
+            const navOverlay = document.getElementById('navOverlay');
+            const navClose = document.getElementById('navClose');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const modal = document.getElementById('contactModal');
+            const openModalBtn = document.getElementById('openModalBtn');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const contactForm = document.getElementById('contactForm');
 
-        // Sections with dark backgrounds need light header text
-        const darkSections = document.querySelectorAll('.hero, .services');
-
-        function updateHeaderColors() {
-            const headerHeight = 80;
-            let onDarkSection = false;
-
-            darkSections.forEach(section => {
-                const rect = section.getBoundingClientRect();
-                // Check if dark section is behind the header
-                if (rect.top < headerHeight && rect.bottom > headerHeight) {
-                    onDarkSection = true;
-                }
+            // ===== NAVIGATION =====
+            menuButton.addEventListener('click', () => {
+                navOverlay.classList.add('active');
+                body.classList.add('no-scroll');
             });
 
-            if (onDarkSection) {
-                logo.classList.remove('scrolled');
-                menuButton.classList.remove('scrolled');
-            } else {
-                logo.classList.add('scrolled');
-                menuButton.classList.add('scrolled');
-            }
-        }
-
-        window.addEventListener('scroll', updateHeaderColors);
-        updateHeaderColors(); // Initial check
-
-        // Navigation overlay
-        const navOverlay = document.getElementById('navOverlay');
-        const navClose = document.getElementById('navClose');
-
-        menuButton.addEventListener('click', () => {
-            navOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-
-        navClose.addEventListener('click', () => {
-            navOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-
-        // Close nav when clicking a link
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', () => {
+            navClose.addEventListener('click', () => {
                 navOverlay.classList.remove('active');
-                document.body.style.overflow = '';
+                body.classList.remove('no-scroll');
             });
-        });
 
-        // Intersection Observer for section animations
-        const observerOptions = {
-            threshold: 0.2,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    navOverlay.classList.remove('active');
+                    body.classList.remove('no-scroll');
+                });
             });
-        }, observerOptions);
 
-        document.querySelectorAll('section:not(.hero)').forEach(section => {
-            observer.observe(section);
-        });
+            // ===== INTERSECTION OBSERVER FOR PARALLAX BACKGROUNDS =====
+            const scrollSections = document.querySelectorAll('.scroll-section');
 
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+            scrollSections.forEach(section => {
+                const bgImages = section.querySelectorAll('.bg-image');
+                const contentPanels = section.querySelectorAll('.content-panel');
+
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '-40% 0px -40% 0px',
+                    threshold: 0
+                };
+
+                const panelObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const panel = entry.target;
+                            const bgIndex = parseInt(panel.dataset.bg, 10);
+
+                            // Add visible class to panel for animations
+                            panel.classList.add('visible');
+
+                            // Switch background image
+                            bgImages.forEach((img, index) => {
+                                img.classList.toggle('active', index === bgIndex);
+                            });
+                        }
                     });
+                }, observerOptions);
+
+                contentPanels.forEach(panel => {
+                    panelObserver.observe(panel);
+                });
+            });
+
+            // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // ===== CONTACT MODAL =====
+            openModalBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                modal.classList.add('active');
+                body.classList.add('no-scroll');
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                modal.classList.remove('active');
+                body.classList.remove('no-scroll');
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    body.classList.remove('no-scroll');
                 }
             });
-        });
 
-        // Parallax effect for hero background
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const heroImg = document.querySelector('.hero-background img');
-            if (heroImg && scrolled < window.innerHeight) {
-                heroImg.style.transform = `translateY(${scrolled * 0.4}px)`;
-            }
-        });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                    body.classList.remove('no-scroll');
+                }
+            });
 
-        // Contact Modal functionality
-        const modal = document.getElementById('contactModal');
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const contactForm = document.getElementById('contactForm');
+            // ===== FORM SUBMISSION =====
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
 
-        openModalBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
+                const formData = new FormData(contactForm);
+                const data = Object.fromEntries(formData.entries());
+                data.services = Array.from(contactForm.querySelectorAll('input[name="services"]:checked'))
+                    .map(cb => cb.value);
 
-        closeModalBtn.addEventListener('click', () => {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        });
+                console.log('Form submitted:', data);
+                alert('Thank you for your inquiry! We\'ll be in touch within 24 hours.');
 
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
+                contactForm.reset();
                 modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                modal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        });
-
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData.entries());
-
-            // Get all checked services
-            data.services = Array.from(contactForm.querySelectorAll('input[name="services"]:checked'))
-                .map(cb => cb.value);
-
-            console.log('Form submitted:', data);
-
-            alert('Thank you for your inquiry! We\'ll be in touch within 24 hours.');
-
-            contactForm.reset();
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
+                body.classList.remove('no-scroll');
+            });
         });
     </script>
 </body>
