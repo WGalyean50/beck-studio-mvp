@@ -78,10 +78,7 @@
             transition: background-color 0.4s ease;
         }
 
-        .floating-header.scrolled {
-            background-color: rgba(245, 243, 239, 0.95);
-            backdrop-filter: blur(10px);
-        }
+        /* Header always transparent */
 
         .floating-header > * {
             pointer-events: auto;
@@ -97,8 +94,6 @@
             transition: color 0.4s ease;
         }
 
-        .logo.scrolled { color: var(--charcoal); }
-
         .menu-button {
             background: none;
             border: none;
@@ -111,8 +106,6 @@
             padding: 0.5rem 0;
             transition: color 0.4s ease;
         }
-
-        .menu-button.scrolled { color: var(--charcoal); }
 
         /* Full-screen Navigation Overlay */
         .nav-overlay {
@@ -953,19 +946,6 @@
                     body.classList.remove('no-scroll');
                 });
             });
-
-            // ===== HEADER SCROLL BEHAVIOR =====
-            const updateHeader = () => {
-                const scrollY = window.scrollY;
-                const isScrolled = scrollY > 100;
-
-                mainHeader.classList.toggle('scrolled', isScrolled);
-                logo.classList.toggle('scrolled', isScrolled);
-                menuButton.classList.toggle('scrolled', isScrolled);
-            };
-
-            window.addEventListener('scroll', updateHeader);
-            updateHeader();
 
             // ===== INTERSECTION OBSERVER FOR PARALLAX BACKGROUNDS =====
             const scrollSections = document.querySelectorAll('.scroll-section');
